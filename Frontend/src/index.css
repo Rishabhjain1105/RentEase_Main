@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body{
+    /* background-color: #121212; */
+    /* background-color: #0D0D0B; */
+    /* background-color: #F9F9F9; */
+    background-color: #fbfdff;
+    color: black;
+}
+
+#buildingCardDiv::-webkit-scrollbar{
+    display: none;
+}
