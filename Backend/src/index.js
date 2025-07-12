@@ -30,6 +30,7 @@ CONNECT_DB()
 
 
 
+
 // const authRoutes = require('./routes/authRoutes');
 // const propertyRoutes = require('./routes/propertyRoutes');
 // const roomRoutes = require('./routes/roomRoutes')

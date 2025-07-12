@@ -1,9 +1,9 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import RCard from '../components/others/Room-card/RCard.jsx';
-import AddRoomModal from '../components/Modals/RoomModal/RoomModal.jsx';
+import RCard from '../../components/Cards/Room-card/RCard.jsx';
+import AddRoomModal from '../../components/Modals/RoomModal/RoomModal.jsx';
 import { useNavigate, useParams } from 'react-router-dom';
-import { api } from '../Utils/AxiosHelper.js';
+import { api } from '../../Utils/AxiosHelper.js';
 
 const RoomDashboard = () => {
     const navigate = useNavigate();

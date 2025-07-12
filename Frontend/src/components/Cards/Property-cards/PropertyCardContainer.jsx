@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import BCard from './BCard';
+import PropertyCard from '../Property-cards/PropertyCard.jsx'
 import PropertyModal from '../../Modals/PropertModal/PropertyModal.jsx';
 import { api } from '../../../Utils/AxiosHelper.js';
 // import LoadingSpinner from '../../Common/LoadingSpinner';  
 
-const TenantCards = () => {
+const PropertyCardContainer = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [properties, setProperties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -59,8 +59,8 @@ const TenantCards = () => {
     <div className=" md:px-4 md:py-8 min-h-screen bg-gray-50">
       {/* Header section */}
       <div className=" flex flex-col md:flex-row justify-between items-start md:items-center mb-6 md:mb-10 gap-4">
-        <h1 className="text-2xl font-bold text-gray-800 ">My Room</h1>
-        {/* <button 
+        <h1 className="text-2xl font-bold text-gray-800 ">Properties Dashboard</h1>
+        <button 
           onClick={() => setIsModalOpen(true)}
           className="flex items-center bg-blue-700 hover:bg-blue-600 px-4 py-2 md:px-6 md:py-2 rounded-xl text-white transition-colors"
         >
@@ -68,7 +68,7 @@ const TenantCards = () => {
             <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
           </svg>
           Add Property
-        </button> */}
+        </button>
       </div>
 
       {/* Loading state */}
@@ -112,7 +112,7 @@ const TenantCards = () => {
             
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => (
-                <BCard
+                <PropertyCard
                   key={property._id || property.id}
                   id={property._id || property.id}
                   title={property.title}
@@ -149,4 +149,4 @@ const TenantCards = () => {
   );
 };
 
-export default TenantCards;
+export default PropertyCardContainer;

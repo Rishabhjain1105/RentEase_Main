@@ -84,7 +84,6 @@ const addNewProperty = asyncHandler(async (req, res) => {
 });
 
 const getProperties = asyncHandler(async (req, res, next) => {
-  // console.log("Entered")
   const properties = await Property.find({ owner: req.user._id })
   .populate('owner').lean();
   // const properties = await Property.aggregate([
@@ -128,9 +127,26 @@ const getProperties = asyncHandler(async (req, res, next) => {
       properties, 
       "Properties retrieved successfully"
     ));
-  });
-  
-  
+});
+
+const getAllProperties = asyncHandler(async (req, res, next) => {
+    const properties = await Property.find()
+    .populate('owner', 'username').lean();
+
+    if (!properties || properties.length === 0) {
+      throw new ApiError(404, "No properties created yet by anyone");
+    }
+
+    return res
+    .json(
+      new ApiResponses(
+        200,
+        properties,
+        "Properties retrieved successfully"
+      )
+    )
+})
+
 const deleteProperty = asyncHandler(async (req, res, next) => {
   const { propertyId } = req.body;
 
@@ -174,5 +190,5 @@ const deleteAllProperty = asyncHandler(async (req, res, next) => {
 });
 
 
-export { addNewProperty, getProperties, deleteAllProperty, deleteProperty };
+export { addNewProperty, getProperties, getAllProperties, deleteAllProperty, deleteProperty };
 

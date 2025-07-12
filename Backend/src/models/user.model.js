@@ -94,7 +94,7 @@ userSchema.methods.generateAccessToken = function(){
             email : this.email,
             role: this.role
 
-        },
+        }, 
 
         process.env.ACCESS_TOKEN_SECRET,
 

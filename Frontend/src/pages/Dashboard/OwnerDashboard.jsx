@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
-import BuildingCardDiv from '../others/Property-cards/BuildingCardDiv.jsx'
+import PropertyCardContainer from '../../components/Cards/Property-cards/PropertyCardContainer.jsx'
 
 const OwnerDashboard = () => {
   return (
     <>  
       <div>
-        <BuildingCardDiv />
+        <PropertyCardContainer />
       </div>
       
 

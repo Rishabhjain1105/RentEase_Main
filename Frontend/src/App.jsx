@@ -1,10 +1,10 @@
 // import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 // import axios from 'axios';
-import OwnerDashboard from './components/Dashboard/OwnerDashboard';
+import OwnerDashboard from './pages/Dashboard/OwnerDashboard';
 
-import RoomDashboard from './pages/RoomDashboard';
-import TenantDashboard from './components/Dashboard/TenantDashboard';
+import RoomDashboard from './pages/Dashboard/RoomDashboard';
+import TenantDashboard from './pages/Dashboard/TenantDashboard';
 
 import AuthPage from './pages/AuthPage';
 import Profile from './pages/Sidebar/Profile';

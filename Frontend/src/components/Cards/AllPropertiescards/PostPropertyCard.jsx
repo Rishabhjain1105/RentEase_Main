@@ -2,8 +2,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Home, DollarSign, Box, Users } from 'lucide-react';
 
-const BCard = ({
+const PostPropertyCard = ({
   id,
+  owner,
   title,
   description,
   street,
@@ -30,9 +31,12 @@ const BCard = ({
 
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col border border-gray-100 h-full cursor-pointer">
-
+      <div className='w-full border-b-2 flex items-center py-2 pl-4 gap-2'>
+        <div className='h-6 w-6 rounded-full bg-black'></div>
+        <div className='h-full font-semibold'>{owner}</div>
+      </div>
       {/* Property Image */}
-      <div className="h-48 bg-gray-100 overflow-hidden">
+      <div className="h-72 bg-gray-100 overflow-hidden">
         {propertyImages?.length > 0 ? (
           <img 
             src={propertyImages[0]} 
@@ -136,10 +140,10 @@ const BCard = ({
               View
             </button> */}
             <button 
-              onClick={() => navigate(`/OwnerDashboard/rooms/${id}`)}
+              onClick={() => navigate(`/TenantDashboard/Search/${id}`)}
               className="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded-md"
             >
-              Manage
+              View
             </button>
           </div>
         </div>
@@ -148,4 +152,4 @@ const BCard = ({
   );
 };
 
-export default BCard;
+export default PostPropertyCard;

@@ -1,5 +1,5 @@
 import Router from 'express'
-import {addNewProperty, getProperties, deleteAllProperty, deleteProperty} from '../controllers/property.controller.js'
+import {addNewProperty, getProperties , getAllProperties, deleteAllProperty, deleteProperty} from '../controllers/property.controller.js'
 import {verifyJWT} from '../middlewares/auth.middleware.js'
 import {upload} from '../middlewares/multer.middleware.js'
 
@@ -16,6 +16,8 @@ router.route('/add-new-property').post(
 )
 
 router.route('/fetch-properties').get(verifyJWT, getProperties)
+
+router.route('/fetch-all-properties').get(verifyJWT, getAllProperties)
 
 router.route('/delete-property').post(verifyJWT, deleteProperty)
 
