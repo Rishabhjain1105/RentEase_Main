@@ -85,7 +85,8 @@ const getRoomsByProperty = asyncHandler(async (req, res) => {
       throw new ApiError(400, "Property ID is required");
   }
 
-  const rooms = await Room.find({ property_id: propertyId });
+  const rooms = await Room.find({ property_id: propertyId })
+  .populate("property_id").lean()
 
   if (!rooms || rooms.length === 0) {
       throw new ApiError(404, "No rooms found for this property");

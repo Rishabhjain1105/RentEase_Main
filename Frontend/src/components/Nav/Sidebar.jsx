@@ -24,23 +24,7 @@ const Sidebar = ({ children , to}) => {
                     <ul className='flex-1 px-3 '>{children}</ul>
                 </SidebarContext.Provider>
 
-                <Link to={to}>
-                    <div className='border-t flex p-3'>
-                        <UserPen className=' flex-shrink-0 w-10 h-10 rounded-md p-2 bg-blue-400' />
-
-                        <div
-                        className={`flex justify-between items-center 
-                        overflow-hidden transition-all ${expanded ? 'w-52 ml-3' : "w-0 h-0"}`}>
-
-                            <div className='leading-5'>
-                                <h2 className=' text-black font-semibold'>Adarsh Raghuvanshi</h2>
-                                <span className='text-gray-500'>aadi29@gmail.com</span>
-                            </div>
-
-                            <MoreVertical size={20} />
-                        </div>
-                    </div>
-                </Link>
+                
             </nav>
         </aside>
     );

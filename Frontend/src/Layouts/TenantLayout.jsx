@@ -6,9 +6,9 @@ import { BarChart2, BarChart3, LayoutDashboard, LifeBuoy, Receipt, ReceiptIndian
 const TenantLayout = () => {
     
     return (
-        <div className=' h-screen flex  '>
+        <div className=' h-screen flex cursor-pointer'>
             
-          <Sidebar to = "/TenantDashboard/Profile">
+          <Sidebar >
             <SidebarItem 
               icon={ <LayoutDashboard size={20} /> }
               text={"Dashboard"}  

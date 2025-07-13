@@ -1,5 +1,5 @@
 // import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 // import axios from 'axios';
 import OwnerDashboard from './pages/Dashboard/OwnerDashboard';
 
@@ -13,40 +13,47 @@ import Statistics from './pages/Sidebar/Statistics';
 import OwnerLayout from './Layouts/OwnerLayout';
 import Billings from './pages/Sidebar/Billings';
 import Help from './pages/Sidebar/Help';
-import ViewProperty from './pages/ViewProperty';
 import MainLayout from './Layouts/MainLayout';
-import RoomView from './pages/RoomView';
 import TenantLayout from './Layouts/TenantLayout';
 import TenantProfile from './pages/TenantSidebar/TenantProfile';
 import SearchProperties from './pages/TenantSidebar/SearchProperties';
 import TenantStatistics from './pages/TenantSidebar/TenantStatistics';
 import TenantBillings from './pages/TenantSidebar/TenantBillings';
+import ViewProperty from './pages/ViewProperty';
+import { UserContext } from './Context/UserContext';
 
-
+import React, {useContext, useEffect} from 'react';
 
 
 const App = () => {
   
+  const {user, setUser} = useContext(UserContext)
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/"); // Redirect to login
+    }
+  }, [user]);
+
   return (
     
     <Routes>
       <Route path='/' element={<Navigate to = "/auth" />} />
       <Route path='/auth' element={<AuthPage />} />
-
       
 
       <Route element={<MainLayout />}>
+        <Route path='/profile' element={<Profile/>} />
         <Route path='/OwnerDashboard' element={< OwnerLayout />}>
           <Route index element={< OwnerDashboard />} />
           <Route path='Statistics' element={<Statistics />} />
           <Route path='Billings' element={<Billings />} />
           <Route path='Settings' element={<Settings />} />
           <Route path='Help' element={<Help />} />
-          <Route path='profile' element={<Profile/>} />
+          {/* <Route path='profile' element={<Profile/>} /> */}
 
-          <Route path='property-details/:id' element={<ViewProperty />} />
           <Route path='rooms/:id' element={<RoomDashboard />} />
-          <Route path='viewroom' element={<RoomView />} />
         </Route>
 
         <Route path='/TenantDashboard' element={< TenantLayout />}>
@@ -57,13 +64,16 @@ const App = () => {
           <Route path='Billings' element={<TenantBillings />} />
           <Route path='Settings' element={<Settings />} />
           <Route path='Help' element={<Help />} />
-          <Route path='profile' element={<TenantProfile/>} />
+          {/* <Route path='profile' element={<TenantProfile/>} /> */}
+
+          
+          <Route path='/TenantDashboard/Search/:id' element={<ViewProperty />} />
+
 
           
         </Route>
       </Route>
        
-      <Route path='/TenantDashboard' element={<TenantDashboard/>} />
 
     </Routes>
   );

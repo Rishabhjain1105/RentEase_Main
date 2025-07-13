@@ -3,6 +3,7 @@ import PropertyCardContainer from '../../components/Cards/Property-cards/Propert
 
 const OwnerDashboard = () => {
   return (
+      
     <>  
       <div>
         <PropertyCardContainer />

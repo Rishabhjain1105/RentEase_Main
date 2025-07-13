@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
     return (
-        <div className="h-screen flex flex-col">
+        <div className="h-screen flex flex-col cursor-pointer">
             <Header />
             <div className="overflow-hidden">
                 <Outlet />

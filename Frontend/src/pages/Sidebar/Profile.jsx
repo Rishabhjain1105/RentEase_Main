@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   User, 
@@ -11,24 +11,55 @@ import {
   X,
   LogOut
 } from 'lucide-react';
+import { api } from '../../Utils/AxiosHelper.js';
+import { UserContext } from '../../Context/UserContext';
 
 const Profile = () => {
+
+    const {user, setUser} = useContext(UserContext)
+    // console.log("Current User ", user)
+
     const navigate = useNavigate();
     
-    // Sample user data
-    const sampleUser = {
-        fullName: 'Adarsh Raghuvanshi',
-        email: 'aadi29@gmail.com',
-        phoneNumber: '+91 9876543210',
-        aadharCardNumber: '1234 5678 9012',
-        address: '123, Main Road, Ghatabillod, Dhar, MP - 454773',
-        role: 'owner'
-    };
-
-    const [profile, setProfile] = useState(sampleUser);
+    const [profile, setProfile] = useState({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        aadharCardNumber: '',
+        address: '',
+        role: ''
+    });
     const [error, setError] = useState('');
     const [isEditing, setIsEditing] = useState(false);
-    const [editedProfile, setEditedProfile] = useState(sampleUser);
+    const [editedProfile, setEditedProfile] = useState({
+        fullName: '',
+        email: '',
+        phoneNumber: '',
+        aadharCardNumber: '',
+        address: '',
+        role: ''
+    });
+
+    
+
+    // useEffect(() => {
+    //     const fetchUserProfile = async () => {
+    //         try {
+    //             const response = await api.post('/users/get-current-user'); // Changed from post to get
+    //             if (response.status !== 200) {
+    //                 throw new Error('Failed to fetch user profile');
+    //             }
+    //             const data = response.data; // Changed from response.data() to response.data
+    //             setProfile(data);
+    //             setEditedProfile(data);
+    //         } catch (error) {
+    //             setError('Error fetching user profile');
+    //             console.error(error);
+    //         }
+    //     };
+
+    //     fetchUserProfile();
+    // }, []);
 
     const handleEdit = () => {
         setIsEditing(true);
@@ -39,15 +70,21 @@ const Profile = () => {
         setIsEditing(false);
     };
 
-    const handleSave = () => {
-        // Simulate API call with setTimeout
+    const handleSave = async () => {
         setError('');
-        setTimeout(() => {
+        try {
+            // Make API call to update profile
+            const response = await api.put('/users/update-profile', editedProfile);
+            if (response.status !== 200) {
+                throw new Error('Failed to update profile');
+            }
             setProfile(editedProfile);
             setIsEditing(false);
-            // Show success message
             alert('Profile updated successfully!');
-        }, 1000);
+        } catch (error) {
+            setError('Error updating profile');
+            console.error(error);
+        }
     };
 
     const handleChange = (e) => {
@@ -56,6 +93,28 @@ const Profile = () => {
             ...prev,
             [name]: value
         }));
+    };
+
+    const handleLogout = async () => {
+        try {
+            // Send logout request to the server
+            await api.post("/users/logout");
+    
+            localStorage.removeItem("authToken"); 
+
+            // Clear cookies
+            document.cookie.split(";").forEach((cookie) => {
+                const [name] = cookie.split("=");
+                document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+            });
+            // Update application state (e.g., clear user data)
+            setUser(null); // Example: Assuming you have a setUser function in context/state
+    
+            navigate('/')
+        } catch (error) {
+            console.error("Logout failed:", error);
+            alert("Failed to logout Or already logged out.");
+        }
     };
 
     return (
@@ -74,16 +133,16 @@ const Profile = () => {
                                         <input
                                             type="text"
                                             name="fullName"
-                                            value={editedProfile.fullName}
+                                            value={editedProfile.fullName || ''}
                                             onChange={handleChange}
                                             className="border-b border-gray-300 focus:border-blue-500 focus:outline-none"
                                         />
                                     ) : (
-                                        profile.fullName
+                                        user?.fullName
                                     )}
                                 </h1>
                                 <p className="text-gray-600">
-                                    {profile.role === 'owner' ? 'Property Owner' : 'Tenant'}
+                                    {user?.role }
                                 </p>
                             </div>
                         </div>
@@ -115,16 +174,22 @@ const Profile = () => {
                                 </button>
                             )}
                         </div>
-                        
                     </div>
                     <button
-                        onClick={()=> navigate('/')}
-                        className="flex items-center  px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-blue-700"
+                        onClick={handleLogout}
+                        className="flex items-center px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
                     >
                         <LogOut className="w-4 h-4 mr-2" />
                         Logout
                     </button>
                 </div>
+
+                {/* Error Message */}
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
 
                 {/* Profile Details */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,12 +205,12 @@ const Profile = () => {
                                         <input
                                             type="email"
                                             name="email"
-                                            value={editedProfile.email}
+                                            value={editedProfile.email || ''}
                                             onChange={handleChange}
                                             className="w-full border-b border-gray-300 focus:border-blue-500 focus:outline-none"
                                         />
                                     ) : (
-                                        <p className="text-gray-800">{profile.email}</p>
+                                        <p className="text-gray-800">{user?.email}</p>
                                     )}
                                 </div>
                             </div>
@@ -157,12 +222,12 @@ const Profile = () => {
                                         <input
                                             type="tel"
                                             name="phoneNumber"
-                                            value={editedProfile.phoneNumber}
+                                            value={editedProfile.phoneNumber || ''}
                                             onChange={handleChange}
                                             className="w-full border-b border-gray-300 focus:border-blue-500 focus:outline-none"
                                         />
                                     ) : (
-                                        <p className="text-gray-800">{profile.phoneNumber}</p>
+                                        <p className="text-gray-800">{user?.phoneNumber}</p>
                                     )}
                                 </div>
                             </div>
@@ -174,12 +239,12 @@ const Profile = () => {
                                         <input
                                             type="text"
                                             name="aadharCardNumber"
-                                            value={editedProfile.aadharCardNumber}
+                                            value={editedProfile.aadharCardNumber || ''}
                                             onChange={handleChange}
                                             className="w-full border-b border-gray-300 focus:border-blue-500 focus:outline-none"
                                         />
                                     ) : (
-                                        <p className="text-gray-800">{profile.aadharCardNumber}</p>
+                                        <p className="text-gray-800">{user?.aadharCardNumber}</p>
                                     )}
                                 </div>
                             </div>
@@ -196,13 +261,13 @@ const Profile = () => {
                                 {isEditing ? (
                                     <textarea
                                         name="address"
-                                        value={editedProfile.address}
+                                        value={editedProfile.address || ''}
                                         onChange={handleChange}
                                         className="w-full border-b border-gray-300 focus:border-blue-500 focus:outline-none"
                                         rows="3"
                                     />
                                 ) : (
-                                    <p className="text-gray-800">{profile.address}</p>
+                                    <p className="text-gray-800">{user?.address}</p>
                                 )}
                             </div>
                         </div>

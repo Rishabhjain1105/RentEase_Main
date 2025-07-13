@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { api } from '../../Utils/AxiosHelper.js';
+import { UserContext } from '../../Context/UserContext.jsx';
 
 const LoginForm = () => {
+
+  const {user, setUser} = useContext(UserContext)
+ 
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
@@ -16,14 +21,14 @@ const LoginForm = () => {
 
     try {
       
-      const response = await axios.post(
-        'http://localhost:8000/api/v1/users/login',
-        formData,
+      const response = await api.post('/users/login',formData,
         { withCredentials: true } 
       );
 
       if (response.data.success) {
         const role = response.data.data.user.role; 
+
+        setUser(response?.data?.data?.user)
 
         // Navigate to the appropriate dashboard based on the role
         if (role === 'owner') {

@@ -48,7 +48,7 @@ const RoomDashboard = () => {
     }
 
     return (
-        <div className="h-screen overflow-x-hidden max-w-full mx-auto py-8 px-4">
+        <div className=" overflow-x-hidden max-w-full mx-auto py-8 px-4 flex-shrink-0">
             <div className="bg-transparent mb-8 flex items-center justify-between w-full px-6">
                 <h1 className="font-bold text-3xl font-sans">Rooms Dashboard</h1>
                 <button 
