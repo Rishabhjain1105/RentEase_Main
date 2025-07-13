@@ -23,6 +23,7 @@ import ViewProperty from './pages/ViewProperty';
 import { UserContext } from './Context/UserContext';
 
 import React, {useContext, useEffect} from 'react';
+import Messages from './pages/TenantSidebar/Messages';
 
 
 const App = () => {
@@ -30,11 +31,11 @@ const App = () => {
   const {user, setUser} = useContext(UserContext)
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/"); // Redirect to login
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/"); // Redirect to login
+  //   }
+  // }, [user]);
 
   return (
     
@@ -64,7 +65,7 @@ const App = () => {
           <Route path='Billings' element={<TenantBillings />} />
           <Route path='Settings' element={<Settings />} />
           <Route path='Help' element={<Help />} />
-          {/* <Route path='profile' element={<TenantProfile/>} /> */}
+          <Route path='Messages' element={<Messages/>} />
 
           
           <Route path='/TenantDashboard/Search/:id' element={<ViewProperty />} />

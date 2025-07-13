@@ -1,7 +1,7 @@
 import { Outlet, useLocation } from 'react-router-dom';
 import React, { useState } from 'react'
 import {Sidebar , SidebarItem} from '../components/Nav/Sidebar'
-import { BarChart2, BarChart3, LayoutDashboard, LifeBuoy, Receipt, ReceiptIndianRupee, Search, Settings, Settings2 } from 'lucide-react'
+import { BarChart2, BarChart3, LayoutDashboard, LifeBuoy, MessageCircle, Receipt, ReceiptIndianRupee, Search, Settings, Settings2 } from 'lucide-react'
 
 const TenantLayout = () => {
     
@@ -21,6 +21,12 @@ const TenantLayout = () => {
               to = "/TenantDashboard/Search"
             />
 
+             <SidebarItem 
+              icon={ <MessageCircle size={20} /> }
+              text={"Messages"}  
+              to = "/TenantDashboard/Messages"
+            />
+            
             <SidebarItem 
               icon={ <BarChart3 size={20} /> }
               text={"Statistics"}  

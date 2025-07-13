@@ -1,6 +1,7 @@
 import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
 import React, { useState } from 'react';
 import TenantDetailsTable from '../../Tables/TenantDetailsTable';
+import UploadBillsModal from '../../Modals/UploadBillsModal/UploadBillsModal';
 
 const RCard = ({ 
   roomNumber,
@@ -22,8 +23,12 @@ const RCard = ({
   onAddBill, // Function to handle adding a new bill
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBillModalOpen, setIsBillModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Tenant Details');
+
+  const handleBillModalClose = () => {
+    setIsBillModalOpen(false)
+  }
 
   const handleUploadDocument = () => {
     // Handle document upload
@@ -35,6 +40,7 @@ const RCard = ({
 
   const handleAddBill = () => {
     // Handle adding a new bill (trigger modal or form)
+    setIsBillModalOpen(true)
     if (onAddBill) {
       onAddBill(roomNumber); // Pass room number to identify the room
     }
@@ -49,7 +55,7 @@ const RCard = ({
           <div className="mb-8 w-full">
             <button 
                 className="bg-green-600 hover:bg-green-500 mb-2 text-white px-4 py-2 rounded-md"
-                onClick={handleUploadDocument}
+                onClick={handleAddBill}
                 >
                 Upload Bill
             </button>
@@ -176,6 +182,9 @@ const RCard = ({
           </div>
         )}
       </div>
+
+      {isBillModalOpen && <UploadBillsModal Close={handleBillModalClose}/>}
+      
     </div>
   );
 };
