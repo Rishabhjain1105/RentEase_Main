@@ -70,6 +70,11 @@ const roomSchema = new Schema({
     immutable: true,
 
   },
+  bills:{
+    type: Schema.Types.ObjectId,
+    ref: 'Bill',
+    // required: true
+  }
 }, {
   timestamps: true
 });

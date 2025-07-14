@@ -1,9 +1,13 @@
-import { ArrowDownIcon, ArrowUpIcon } from 'lucide-react';
-import React, { useState } from 'react';
+import { ArrowDownIcon, ArrowUpIcon, Coins } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 import TenantDetailsTable from '../../Tables/TenantDetailsTable';
+import BillingDetailsTableForOwner from '../../Tables/BillingDetailsTableForOwner.jsx';
 import UploadBillsModal from '../../Modals/UploadBillsModal/UploadBillsModal';
+import { api } from '../../../Utils/AxiosHelper.js';
 
 const RCard = ({ 
+  roomId,
+  propertyId,
   roomNumber,
   roomType,
   tenantType,
@@ -19,127 +23,114 @@ const RCard = ({
   tenantDetails=(""),
   messages,
   documents,
-  bills, // Pass billing details as a prop
   onAddBill, // Function to handle adding a new bill
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isBillModalOpen, setIsBillModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('Tenant Details');
-
+  const [bills, setBills] = useState([]);
+  
   const handleBillModalClose = () => {
     setIsBillModalOpen(false)
   }
 
-  const handleUploadDocument = () => {
-    // Handle document upload
-  };
-
-  const handleSendMessage = () => {
-    // Handle sending message to tenant
-  };
-
   const handleAddBill = () => {
-    // Handle adding a new bill (trigger modal or form)
     setIsBillModalOpen(true)
-    if (onAddBill) {
-      onAddBill(roomNumber); // Pass room number to identify the room
-    }
   };
 
-  const renderTabContent = () => {
-    switch (activeTab) {
-      case 'Tenant Details':
-        return <TenantDetailsTable tenantDetails={tenantDetails} />;
-      case 'Billing Details':
-        return (
-          <div className="mb-8 w-full">
-            <button 
-                className="bg-green-600 hover:bg-green-500 mb-2 text-white px-4 py-2 rounded-md"
-                onClick={handleAddBill}
-                >
-                Upload Bill
-            </button>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white shadow-md rounded-lg">
-                <thead className="bg-indigo-600 text-white">
-                  <tr>
-                    <th className="py-3 px-6 text-left">Month</th>
-                    <th className="py-3 px-6 text-left">Meter Reading</th>
-                    <th className="py-3 px-6 text-left">Electricity Bill</th>
-                    <th className="py-3 px-6 text-left">Utility Bill</th>
-                    <th className="py-3 px-6 text-left">Total Bill</th>
-                    <th className="py-3 px-6 text-left">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bills && bills.length > 0 ? (
-                    bills.map((bill, index) => (
-                      <tr key={index} className="border-b hover:bg-gray-100">
-                        <td className="py-3 px-6">{bill.month}</td>
-                        <td className="py-3 px-6">{bill.meterReading}</td>
-                        <td className="py-3 px-6">₹{bill.electricityBill}</td>
-                        <td className="py-3 px-6">₹{bill.utilityBill}</td>
-                        <td className="py-3 px-6">₹{bill.totalBill}</td>
-                        <td className={`py-3 px-6 font-semibold ${bill.status === 'Paid' ? 'text-green-600' : 'text-red-600'}`}>{bill.status}</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr>
-                      <td colSpan="6" className="text-center py-4 text-gray-500">No billing details available.</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-              
-            </div>
+  useEffect(()=>{
+    const fetchBills = async () =>{
+        try{
+              const response = await api.get(`/bills/fetch-bill/${propertyId}?roomId=${roomId}`)
+              // console.log(response.data)
+              if(response.data.statusCode >= 200){
+                  setBills(response.data.data)
+              }
+
+          } catch(error){
+              console.error(error)
+              setBills([])
+          }
+      }
+
+      fetchBills()
+  }, [propertyId])
+
+    // bills.map((bill)=>{
+    //   console.log(bill.bills)
+    // })
+
+ 
+    // Update the renderTabContent function in RCard.jsx
+
+const renderTabContent = () => {
+  switch (activeTab) {
+    case 'Tenant Details':
+      return <TenantDetailsTable tenantDetails={tenantDetails} />;
+
+    case 'Billing Details':
+      return (
+        <div className="mb-8 w-full">
+          <button 
+            className="bg-green-600 hover:bg-green-500 mb-4 text-white px-4 py-2 rounded-md"
+            onClick={handleAddBill}
+          >
+            Upload Bill
+          </button>
+
+          <div className="overflow-x-auto">
+            <BillingDetailsTableForOwner bills={bills} />
           </div>
-        );
-      case 'Messages':
-        return (
-            <div>
-                <button 
-                    className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
-                    onClick={handleUploadDocument}
-                    >
-                    Send Message
-                </button>
-                <ul>
-                    {messages && messages.length > 0 ? (
-                    messages.map((msg, index) => (
-                        <li key={index} className="text-gray-700">{msg}</li>
-                    ))
-                    ) : (
-                    <li className="text-gray-500">No messages from tenant.</li>
-                    )}
-                </ul>
-            </div>
-        );
-      case 'Documents':
-        return (
-          <div>
-            <button 
-              className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
-              onClick={handleUploadDocument}
-            >
-              Upload Documents
-            </button>
-            <ul className="mt-4">
-              {documents && documents.length > 0 ? (
-                documents.map((doc, index) => (
-                  <li key={index} className="text-gray-700">
-                    {doc.name} - <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">View</a>
-                  </li>
-                ))
-              ) : (
-                <li className="text-gray-500">No documents uploaded.</li>
-              )}
-            </ul>
-          </div>
-        );
-      default:
-        return null;
-    }
-  };
+        </div>
+      );
+    
+    case 'Messages':
+      return (
+        <div>
+          <button 
+            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
+            onClick={handleUploadDocument}
+          >
+            Send Message
+          </button>
+          <ul>
+            {messages && messages.length > 0 ? (
+              messages.map((msg, index) => (
+                <li key={index} className="text-gray-700">{msg}</li>
+              ))
+            ) : (
+              <li className="text-gray-500">No messages from tenant.</li>
+            )}
+          </ul>
+        </div>
+      );
+    
+    case 'Documents':
+      return (
+        <div>
+          <button 
+            className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
+            onClick={handleUploadDocument}
+          >
+            Upload Documents
+          </button>
+          <ul className="mt-4">
+            {documents && documents.length > 0 ? (
+              documents.map((doc, index) => (
+                <li key={index} className="text-gray-700">
+                  {doc.name} - <a href={doc.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">View</a>
+                </li>
+              ))
+            ) : (
+              <li className="text-gray-500">No documents uploaded.</li>
+            )}
+          </ul>
+        </div>
+      );
+    default:
+      return null;
+  }
+};
 
   return (
     <div className="px-4 w-full mb-8">
@@ -183,8 +174,8 @@ const RCard = ({
         )}
       </div>
 
-      {isBillModalOpen && <UploadBillsModal Close={handleBillModalClose}/>}
-      
+      {isBillModalOpen && <UploadBillsModal propertyId={propertyId} roomId={roomId}  rentAmount={rentAmount} Close={handleBillModalClose}/>}
+
     </div>
   );
 };

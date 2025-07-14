@@ -1,13 +1,13 @@
-const mongoose = require('mongoose');
+import mongoose, { Schema } from 'mongoose';
 
 const BillSchema = new mongoose.Schema({
   propertyId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Property',
     required: true,
   },
   roomId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
     ref: 'Room',
     required: true,
   },
@@ -41,4 +41,4 @@ const BillSchema = new mongoose.Schema({
   ],
 }, { timestamps: true });
 
-module.exports = mongoose.model('Bill', BillSchema);
+export const Bill  = mongoose.model('Bill', BillSchema);

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import {api} from '../../../Utils/AxiosHelper.js'
 
-const UploadBillsModal = ({ Close, propertyId }) => {
-  const [bills, setBills] = useState([{ billType: '', amount: '' }]);
+const UploadBillsModal = ({ Close, propertyId, roomId, rentAmount }) => {
+  const [bills, setBills] = useState([{ billType: 'Rent Bill', amount: rentAmount }]);
   const [billDate, setBillDate] = useState('');
 
   const billOptions = [
@@ -18,6 +19,7 @@ const UploadBillsModal = ({ Close, propertyId }) => {
   ];
 
   const handleAddBill = () => {
+    // setBills([...bills, {billType: 'Rent Bill', amount: rentAmount}])
     setBills([...bills, { billType: '', amount: '' }]);
   };
 
@@ -35,6 +37,23 @@ const UploadBillsModal = ({ Close, propertyId }) => {
   const handleSubmit = () => {
     // Handle form submission logic here
     console.log({ billDate, bills });
+
+    api.post(`/bills/add-bill`, {
+      propertyId,
+      roomId,
+      billDate,
+      bills,
+    })
+      .then((response) => {
+        console.log('Bills uploaded successfully:', response.data);
+        alert('Bill added successfully');
+        Close(); // Close the modal after successful submission
+      })
+      .catch((error) => {
+        console.error('Error uploading bills:', error);
+        alert('Failed to upload bills. Please try again.');
+      });
+
   };
 
   return (

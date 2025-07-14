@@ -81,6 +81,7 @@ const RoomDashboard = () => {
                     rooms.map(room => (
                         <RCard
                             key={room._id}
+                            roomId = {room._id}
                             roomNumber={room.roomNumber}
                             roomType={room.roomType}
                             tenantType={room.tenantType}
@@ -96,6 +97,7 @@ const RoomDashboard = () => {
                             tenantDetails={room.tenantDetails} // Pass tenant details
                             messages={room.messages} // Pass tenant messages
                             documents={room.documents} // Pass uploaded documents
+                            propertyId = {id}
                         />
                     ))
                 )}
