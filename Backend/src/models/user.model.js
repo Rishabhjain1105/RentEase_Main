@@ -2,6 +2,54 @@ import mongoose, {Schema} from 'mongoose';
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+
+
+const requestSchema = new Schema({
+    tenantId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User',
+      required: true
+    },
+    roomId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Room',
+      required: true  
+    },
+    status: { 
+      type: String, 
+      enum: ['pending', 'accepted', 'rejected'], 
+      default: 'pending' 
+    },
+    date: { 
+      type: Date, 
+      default: Date.now 
+    }
+});
+  
+
+const incomingRequestSchema = new Schema({
+    ownerId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'User',
+      required: true
+    },
+    roomId: { 
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Room',
+      required: true  
+    },
+    status: { 
+      type: String, 
+      enum: ['pending', 'accepted', 'rejected'], 
+      default: 'pending' 
+    },
+    date: { 
+      type: Date, 
+      default: Date.now 
+    }
+});
+
+
 const userSchema = new Schema(
     {
         role: {
@@ -70,9 +118,15 @@ const userSchema = new Schema(
         refreshToken: {
             type: String,
         },
+
+        outgoingRequests: [requestSchema],
+        incomingRequests: [incomingRequestSchema],
+
     },
     {
         timestamps: true,
+        toJSON: { virtuals: true }, // Enable virtual properties when converted to JSON
+        toObject: { virtuals: true }
     }
 );
 
@@ -119,5 +173,14 @@ userSchema.methods.generateRefreshToken = function(){
 }
 
 
-export const User = mongoose.model("User", userSchema)
+// Add virtual properties to easily get pending requests
+userSchema.virtual('pendingOutgoingRequests').get(function() {
+    return this.outgoingRequests.filter(req => req.status === 'pending');
+});
 
+userSchema.virtual('pendingIncomingRequests').get(function() {
+    return this.incomingRequests.filter(req => req.status === 'pending');
+});
+
+
+export const User = mongoose.model("User", userSchema)

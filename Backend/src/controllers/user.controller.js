@@ -249,6 +249,31 @@ const updateAccountDetails = asyncHandler(async (req, res)=> {
     ))
 })
 
+const searchUser = asyncHandler(async (req, res)=>{
+    const {query} = req.query;
+
+    const user= await User.find({
+        $or: [
+            {username: { $regex: query, $options: "i" } },
+            {phoneNumber: { $regex: query, $options: "i" } },
+            {email: { $regex: query, $options: "i" } },
+           
+        ],
+        // role:'tenant'
+    }).select("_id username phoneNumber email role")
+
+    return res
+    .status(200)
+    .json(new ApiResponses(
+        200,
+        user,
+        "Profile data searched successfully"
+    ))
+})
+
+
+
+
 export {
     registerUser, 
     loginUser, 
@@ -256,5 +281,7 @@ export {
     updateAccessToken,
     updateUserPassword,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    searchUser,
+    
 }

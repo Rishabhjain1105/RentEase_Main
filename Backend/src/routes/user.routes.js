@@ -7,7 +7,8 @@ import {
     updateAccessToken,
     updateUserPassword,
     getCurrentUser,
-    updateAccountDetails
+    updateAccountDetails,
+    searchUser
  } from '../controllers/user.controller.js'
 
 const router = Router()
@@ -22,5 +23,7 @@ router.route('/refresh-token').post(updateAccessToken)
 router.route('/reset-password').post(verifyJWT, updateUserPassword)
 router.route('/get-current-user').post(verifyJWT, getCurrentUser)
 router.route('/update-account-details').post(verifyJWT, updateAccountDetails)
+
+router.route('/search').get(verifyJWT, searchUser)
 
 export default router

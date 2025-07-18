@@ -14,7 +14,7 @@ router.route('/new-room').post(
 );
 
 // // Get rooms for a specific property
-router.route('/:id').get(verifyJWT, getRoomsByProperty);
+router.route('/:id').get(getRoomsByProperty);
 
 // // Get all rooms (for owner dashboard purposes)
 router.route('/fetch-rooms').get( getRooms);

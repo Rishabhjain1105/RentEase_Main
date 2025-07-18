@@ -6,6 +6,7 @@ import OwnerDashboard from './pages/Dashboard/OwnerDashboard';
 import RoomDashboard from './pages/Dashboard/RoomDashboard';
 import TenantDashboard from './pages/Dashboard/TenantDashboard';
 
+import LandingPage from './pages/Dashboard/LandingPage'
 import AuthPage from './pages/AuthPage';
 import Profile from './pages/Sidebar/Profile';
 import Settings from './pages/Sidebar/Settings';
@@ -31,18 +32,18 @@ const App = () => {
   const {user, setUser} = useContext(UserContext)
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("/"); // Redirect to login
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (!user) {
+      navigate("/"); // Redirect to login
+    }
+  }, [user]);
 
   return (
     
     <Routes>
-      <Route path='/' element={<Navigate to = "/auth" />} />
+      <Route path='/' element={<LandingPage />} />
       <Route path='/auth' element={<AuthPage />} />
-      
+      <Route path='/TenantDashboard/Search/:id' element={<ViewProperty />} />
 
       <Route element={<MainLayout />}>
         <Route path='/profile' element={<Profile/>} />

@@ -17,7 +17,7 @@ router.route('/add-new-property').post(
 
 router.route('/fetch-properties').get(verifyJWT, getProperties)
 
-router.route('/fetch-all-properties').get(verifyJWT, getAllProperties)
+router.route('/fetch-all-properties').get(getAllProperties)
 
 router.route('/delete-property').post(verifyJWT, deleteProperty)
 
