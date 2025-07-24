@@ -17,32 +17,32 @@ const sendRequest = asyncHandler(async (req, res) => {
 
         // Validate that the requesting user is an owner
         const owner = await User.findById(ownerId);
-        if (!owner) {
-            return res
-                .status(404)
-                .json(new ApiResponses(404, null, "Owner account not found"));
-        }
+        // if (!owner) {
+        //     return res
+        //         .status(404)
+        //         .json(new ApiResponses(404, null, "Owner account not found"));
+        // }
 
-        if (owner.role !== 'owner') {
-            return res
-                .status(403)
-                .json(new ApiResponses(403, null, "Only owners can send room requests"));
-        }
+        // if (owner.role !== 'owner') {
+        //     return res
+        //         .status(403)
+        //         .json(new ApiResponses(403, null, "Only owners can send room requests"));
+        // }
 
         // Check if room exists
         const room = await Room.findById(roomId);
-        if (!room) {
-            return res
-                .status(404)
-                .json(new ApiResponses(404, null, "Room not found"));
-        }
+        // if (!room) {
+        //     return res
+        //         .status(404)
+        //         .json(new ApiResponses(404, null, "Room not found"));
+        // }
 
         // Verify that the owner owns this room
-        if (room.owner && room.owner.toString() !== ownerId.toString()) {
-            return res
-                .status(403)
-                .json(new ApiResponses(403, null, "You can only send requests for rooms you own"));
-        }
+        // if (room.owner && room.owner.toString() !== ownerId.toString()) {
+        //     return res
+        //         .status(403)
+        //         .json(new ApiResponses(403, null, "You can only send requests for rooms you own"));
+        // }
 
         // Check if the tenant exists
         const tenant = await User.findById(tenantId);
@@ -79,9 +79,7 @@ const sendRequest = asyncHandler(async (req, res) => {
         );
 
         if (existingOutgoingRequest) {
-            return res
-                .status(400)
-                .json(new ApiResponses(400, null, "Request already sent to this tenant for this room"));
+            throw new ApiError(400, "Request already sent to this tenant for this room" )
         }
 
         // Create request objects with all required fields

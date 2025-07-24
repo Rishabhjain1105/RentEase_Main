@@ -21,7 +21,7 @@ router.route('/login').post(loginUser)
 router.route('/logout').post(verifyJWT, logoutUser)
 router.route('/refresh-token').post(updateAccessToken)
 router.route('/reset-password').post(verifyJWT, updateUserPassword)
-router.route('/get-current-user').post(verifyJWT, getCurrentUser)
+router.route('/get-current-user').get(verifyJWT, getCurrentUser)
 router.route('/update-account-details').post(verifyJWT, updateAccountDetails)
 
 router.route('/search').get(verifyJWT, searchUser)

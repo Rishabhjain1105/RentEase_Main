@@ -174,13 +174,13 @@ userSchema.methods.generateRefreshToken = function(){
 
 
 // Add virtual properties to easily get pending requests
-userSchema.virtual('pendingOutgoingRequests').get(function() {
-    return this.outgoingRequests.filter(req => req.status === 'pending');
-});
+// userSchema.virtual('pendingOutgoingRequests').get(function() {
+//     return this.outgoingRequests.filter(req => req.status === 'pending');
+// });
 
-userSchema.virtual('pendingIncomingRequests').get(function() {
-    return this.incomingRequests.filter(req => req.status === 'pending');
-});
+// userSchema.virtual('pendingIncomingRequests').get(function() {
+//     return this.incomingRequests.filter(req => req.status === 'pending');
+// });
 
 
 export const User = mongoose.model("User", userSchema)

@@ -213,12 +213,37 @@ const updateUserPassword = asyncHandler(async (req, res)=>{
     .json(new ApiResponses(200, {}, "Password updated successfully"))
 })
 
-const getCurrentUser = asyncHandler(async(req, res)=>{
-    // const user = await findById(req.user?._id)
-    return res
-    .status(200)
-    .json( new ApiResponses(200, req.user, "User found"))
-})
+// const getCurrentUser = asyncHandler(async(req, res)=>{
+//     const user = await User.findById(req.user?._id)
+//     .populate().lean()
+//     console.log("Get User", user)
+//     return res
+//     .status(200)
+//     .json( new ApiResponses(200, user, "User found"))
+// })
+
+
+const getCurrentUser = asyncHandler(async (req, res) => {
+    try {
+      // Find the user and populate incomingRequests
+      const user = await User.findById(req.user?._id)
+        .populate('incomingRequests.ownerId') // Populate ownerId field
+        .populate('incomingRequests.roomId')   // Populate roomId field
+        .lean()
+        .select("incomingRequests");
+  
+      console.log("Get User", user);
+  
+      return res
+        .status(200)
+        .json(new ApiResponses(200, user, "User found"));
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server Error" });
+    }
+  });
+  
+
 
 const updateAccountDetails = asyncHandler(async (req, res)=> {
     const {email, fullName} = req.body;
@@ -249,6 +274,8 @@ const updateAccountDetails = asyncHandler(async (req, res)=> {
     ))
 })
 
+
+
 const searchUser = asyncHandler(async (req, res)=>{
     const {query} = req.query;
 
@@ -259,7 +286,7 @@ const searchUser = asyncHandler(async (req, res)=>{
             {email: { $regex: query, $options: "i" } },
            
         ],
-        // role:'tenant'
+        role:'tenant'
     }).select("_id username phoneNumber email role")
 
     return res

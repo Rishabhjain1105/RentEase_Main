@@ -1,4 +1,4 @@
-import { BadgeIndianRupee, DatabaseZapIcon, HeartPulseIcon, History, IndianRupeeIcon, LucideSearch } from 'lucide-react'
+import { BadgeIndianRupee, DatabaseZapIcon, GitPullRequestArrow, HeartPulseIcon, History, IndianRupeeIcon, LucideSearch } from 'lucide-react'
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -27,6 +27,13 @@ const TenantDashboard = () => {
             </div>
 
             <div 
+              onClick={() => navigate('/TenantDashboard/Room-Requests')}
+              className='flex items-center px-2 border bg-blue-600 hover:bg-blue-700 text-white font-medium h-16 rounded-lg gap-2'>
+              <GitPullRequestArrow/>
+              <h1>Room Request</h1>
+            </div>
+
+            <div 
               onClick={() => navigate('/TenantDashboard/Messages')}
               className='flex items-center px-2 border bg-blue-600 hover:bg-blue-700 text-white font-medium h-16 rounded-lg gap-2'>
               <HeartPulseIcon/>
@@ -40,7 +47,7 @@ const TenantDashboard = () => {
               <h1>Owner Details Request</h1>
             </div>
 
-
+         
 
             <div 
               onClick={() => navigate('/TenantDashboard/Search')}
@@ -48,6 +55,7 @@ const TenantDashboard = () => {
               <LucideSearch/>
               <h1>Search Properties</h1>
             </div>
+
           </div>
     </div>
   )

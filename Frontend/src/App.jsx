@@ -25,7 +25,7 @@ import { UserContext } from './Context/UserContext';
 
 import React, {useContext, useEffect} from 'react';
 import Messages from './pages/TenantSidebar/Messages';
-
+import RoomRequests from './pages/TenantSidebar/RoomRequests';
 
 const App = () => {
   
@@ -68,7 +68,7 @@ const App = () => {
           <Route path='Help' element={<Help />} />
           <Route path='Messages' element={<Messages/>} />
 
-          
+          <Route path='Room-Requests' element={<RoomRequests />} />
           <Route path='/TenantDashboard/Search/:id' element={<ViewProperty />} />
 
 

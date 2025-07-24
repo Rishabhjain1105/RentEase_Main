@@ -66,7 +66,7 @@ const RCard = ({
 const renderTabContent = () => {
   switch (activeTab) {
     case 'Tenant Details':
-      return <TenantDetailsTable tenantDetails={tenantDetails} />;
+      return <TenantDetailsTable roomId={roomId} tenantDetails={tenantDetails} />;
 
     case 'Billing Details':
       return (

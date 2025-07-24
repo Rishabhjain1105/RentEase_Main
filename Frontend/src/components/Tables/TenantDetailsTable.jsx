@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AssignTenantModal from '../Modals/AssignTenantModal/AssignTenantModal';
 
-const TenantDetailsTable = ({ tenantDetails }) => {
+const TenantDetailsTable = ({ roomId,tenantDetails }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleModalClose = () => {
@@ -44,7 +44,7 @@ const TenantDetailsTable = ({ tenantDetails }) => {
                     )}
                 </tbody>
             </table>
-            {isModalOpen && <AssignTenantModal Close={handleModalClose} />}
+            {isModalOpen && <AssignTenantModal roomId={roomId} Close={handleModalClose} />}
         </div>
     );
 };
