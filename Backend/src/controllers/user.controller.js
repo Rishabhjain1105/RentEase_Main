@@ -232,7 +232,7 @@ const getCurrentUser = asyncHandler(async (req, res) => {
         .lean()
         .select("incomingRequests");
   
-      console.log("Get User", user);
+      //console.log("Get User", user);
   
       return res
         .status(200)

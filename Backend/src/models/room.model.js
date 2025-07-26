@@ -67,9 +67,15 @@ const roomSchema = new Schema({
     type: String,
     enum: ['Available', 'Occupied', 'Maintenance'],
     default: 'Available',
-    immutable: true,
+    //immutable: true,
 
   },
+
+  tenantDetails: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'  // reference to a tenant
+  },
+  
   bills:{
     type: Schema.Types.ObjectId,
     ref: 'Bill',

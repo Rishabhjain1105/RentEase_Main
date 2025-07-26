@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import AssignTenantModal from '../Modals/AssignTenantModal/AssignTenantModal';
 
-const TenantDetailsTable = ({ roomId,tenantDetails }) => {
+const TenantDetailsTable = ({roomId, tenantDetails }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+//   console.log("tenantDetails ", tenantDetails)
 
     const handleModalClose = () => {
         setIsModalOpen(false);
@@ -26,22 +28,22 @@ const TenantDetailsTable = ({ roomId,tenantDetails }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {tenantDetails && tenantDetails.length > 0 ? (
-                        tenantDetails.map((detail, index) => (
-                            <tr key={index} className="hover:bg-gray-100">
-                                <td className="py-3 px-4 text-center border-r-2">{detail.name}</td>
-                                <td className="py-3 px-4 text-center border-r-2">{detail.gmail}</td>
-                                <td className="py-3 px-4 text-center border-r-2">{detail.number}</td>
-                                <td className="py-3 px-4 text-center border-r-2">{detail.aadhaar}</td>
+                    {tenantDetails ? (
+                            <tr className="hover:bg-gray-100">
+                                <td className="py-3 px-4 text-center border-r-2">{tenantDetails.fullName}</td>
+                                <td className="py-3 px-4 text-center border-r-2">{tenantDetails.email}</td>
+                                <td className="py-3 px-4 text-center border-r-2">{tenantDetails.phoneNumber}</td>
+                                <td className="py-3 px-4 text-center border-r-2">{tenantDetails.aadharCardNumber}</td>
                             </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="4" className="text-center py-4 text-gray-500">
-                                No tenant was added.
-                            </td>
-                        </tr>
-                    )}
+                        ) : (
+
+                            <tr>
+                                <td colSpan="4" className="text-center py-4 text-gray-500">
+                                    No tenant was added.
+                                </td>
+                            </tr>
+                        )
+                    }
                 </tbody>
             </table>
             {isModalOpen && <AssignTenantModal roomId={roomId} Close={handleModalClose} />}

@@ -95,8 +95,8 @@ const RoomDashboard = () => {
                             description={room.description}
                             roomStatus={room.roomStatus}
                             tenantDetails={room.tenantDetails} // Pass tenant details
-                            messages={room.messages} // Pass tenant messages
-                            documents={room.documents} // Pass uploaded documents
+                            // messages={room.messages} // Pass tenant messages
+                            // documents={room.documents} // Pass uploaded documents
                             propertyId = {id}
                         />
                     ))

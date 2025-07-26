@@ -11,6 +11,10 @@ const BillSchema = new mongoose.Schema({
     ref: 'Room',
     required: true,
   },
+  tenantId: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+  },
   billDate: {
     type: Date,
     required: true,

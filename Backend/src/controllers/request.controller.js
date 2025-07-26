@@ -10,41 +10,15 @@ const sendRequest = asyncHandler(async (req, res) => {
         const { tenantId, roomId } = req.body;
         const ownerId = req.user._id;
 
-        // Validate required fields
         if (!tenantId || !roomId) {
             throw new ApiError(400, "Both tenantId and roomId are required")
         }
 
-        // Validate that the requesting user is an owner
         const owner = await User.findById(ownerId);
-        // if (!owner) {
-        //     return res
-        //         .status(404)
-        //         .json(new ApiResponses(404, null, "Owner account not found"));
-        // }
+      
 
-        // if (owner.role !== 'owner') {
-        //     return res
-        //         .status(403)
-        //         .json(new ApiResponses(403, null, "Only owners can send room requests"));
-        // }
-
-        // Check if room exists
         const room = await Room.findById(roomId);
-        // if (!room) {
-        //     return res
-        //         .status(404)
-        //         .json(new ApiResponses(404, null, "Room not found"));
-        // }
-
-        // Verify that the owner owns this room
-        // if (room.owner && room.owner.toString() !== ownerId.toString()) {
-        //     return res
-        //         .status(403)
-        //         .json(new ApiResponses(403, null, "You can only send requests for rooms you own"));
-        // }
-
-        // Check if the tenant exists
+      
         const tenant = await User.findById(tenantId);
         if (!tenant) {
             return res
@@ -139,31 +113,23 @@ const acceptRequest = asyncHandler(async (req, res) => {
         
         // Check if tenant exists
         if (!tenant) {
-            return res
-                .status(404)
-                .json(new ApiResponses(404, null, "Tenant not found. User may have been deleted."));
+            throw new ApiError(404, "Tenant not found. User may have been deleted.")
         }
         
         // Check if user is a tenant
         if (tenant.role !== 'tenant') {
-            return res
-                .status(403)
-                .json(new ApiResponses(403, null, "Only tenants can accept requests"));
+            throw new ApiError(403, "Only tenants can accept requests")
         }
         
         // Verify tenant has incomingRequests array
         if (!tenant.incomingRequests || !Array.isArray(tenant.incomingRequests)) {
-            return res
-                .status(500)
-                .json(new ApiResponses(500, null, "User data structure is invalid"));
+            throw new ApiError(500, "User data structure is invalid")
         }
         
         // Find the request in incoming requests
         const requestIndex = tenant.incomingRequests.findIndex(req => req._id.toString() === requestId);
         if (requestIndex === -1) {
-            return res
-                .status(404)
-                .json(new ApiResponses(404, null, "Request not found"));
+            throw new ApiError(400, "Request not found")
         }
         
         const request = tenant.incomingRequests[requestIndex];
@@ -177,9 +143,7 @@ const acceptRequest = asyncHandler(async (req, res) => {
         
         // Check if owner exists
         if (!owner) {
-            return res
-                .status(500)
-                .json(new ApiResponses(500, null, "Owner of this request no longer exists"));
+            throw new ApiError(500, "Owner of this request no longer exists")
         }
         
         const ownerRequestIndex = owner.outgoingRequests.findIndex(
@@ -194,27 +158,27 @@ const acceptRequest = asyncHandler(async (req, res) => {
         
         // Verify room exists before updating
         const room = await Room.findById(request.roomId);
+        // console.log("From request controller: ", room);
         if (!room) {
-            return res
-                .status(404)
-                .json(new ApiResponses(404, null, "Room associated with this request no longer exists"));
+            throw new ApiError(404, "Room associated with this request no longer exists");
         }
-        
-        // Update room status to rented
-        await Room.findByIdAndUpdate(request.roomId, { 
-            status: 'rented',
-            currentTenant: tenantId,
-            rentedAt: new Date()
-        });
+
+        // Assign the tenant to the room
+        room.tenantDetails = tenantId;
+        room.currentOccupants += 1;
+
+        if (room.currentOccupants >= room.maxOccupancy) {
+            room.isOccupied = true;
+        }
+
+        await room.save();
         
         return res
             .status(200)
-            .json(new ApiResponses(200, { request }, "Request accepted successfully"));
+            .json(new ApiResponses(200, { request, room }, "Request accepted successfully and tenant added to the room"));
     } catch (error) {
         console.error("Error in acceptRequest:", error);
-        return res
-            .status(500)
-            .json(new ApiResponses(500, null, "An error occurred while processing the request: " + error.message));
+        throw new ApiError(500, "An error occurred while processing the request")
     }
 });
 

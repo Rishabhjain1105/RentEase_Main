@@ -42,7 +42,7 @@ const LoginForm = () => {
         setError(response.data.message || 'Login failed. Please try again.');
       }
       } catch (err) {
-        setError(err.response?.data?.message || 'An error occurred. Please try again.');
+        setError(err.response?.data?.message || 'Invalid user credentials');
       }
   }
 

@@ -20,7 +20,8 @@ const addNewRoom = asyncHandler(async (req, res) => {
         isFurnitured,
         hasAttachedBath,
         description,
-        propertyId
+        propertyId,
+        tenantDetails
     } = req.body;
 
     if (!roomNumber || !roomType || !tenantType || !floor || !rentAmount) {
@@ -80,13 +81,20 @@ const addNewRoom = asyncHandler(async (req, res) => {
 
 const getRoomsByProperty = asyncHandler(async (req, res) => {
   const propertyId = req.params.id;
+  // console.log("Finding rooms for property ID:", propertyId);
 
   if (!propertyId) {
       throw new ApiError(400, "Property ID is required");
   }
 
   const rooms = await Room.find({ property_id: propertyId })
-  .populate("property_id").lean()
+    .populate("property_id")
+    .populate('tenantDetails')
+    .populate('bills')
+    .lean();
+  
+  // console.log("Rooms before response:", JSON.stringify(rooms, null, 2));
+  // console.log("Rooms from room controller ", rooms);
 
   if (!rooms || rooms.length === 0) {
       throw new ApiError(404, "No rooms found for this property");
@@ -137,10 +145,59 @@ const getRooms = asyncHandler(async (req, res, next) => {
 });
 
 
+const assignTenantToRoom = asyncHandler(async (req, res) => {
+    const { roomId, tenantId } = req.body;
+
+    if (!roomId || !tenantId) {
+        throw new ApiError(400, "Room ID and Tenant ID are required");
+    }
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+        throw new ApiError(404, "Room not found");
+    }
+
+    room.tenantDetails = tenantId;
+    room.currentOccupants += 1;
+
+    if (room.currentOccupants >= room.maxOccupancy) {
+        room.isOccupied = true;
+    }
+
+    await room.save();
+
+    return res.status(200).json(
+        new ApiResponses(200, room, "Tenant assigned to room successfully")
+    );
+});
+
+const assignBillToRoom = asyncHandler(async (req, res) => {
+    const { roomId, billId } = req.body;
+
+    if (!roomId || !billId) {
+        throw new ApiError(400, "Room ID and Bill ID are required");
+    }
+
+    const room = await Room.findById(roomId);
+
+    if (!room) {
+        throw new ApiError(404, "Room not found");
+    }
+
+    room.bills = billId;
+
+    await room.save();
+
+    return res.status(200).json(
+        new ApiResponses(200, room, "Bill assigned to room successfully")
+    );
+});
 
 export { 
     addNewRoom, 
     getRooms, 
     getRoomsByProperty,
-    
+    assignTenantToRoom,
+    assignBillToRoom
 };

@@ -20,7 +20,7 @@ const RCard = ({
   roomImages,
   description,
   roomStatus,
-  tenantDetails=(""),
+  tenantDetails,
   messages,
   documents,
   onAddBill, // Function to handle adding a new bill
@@ -89,7 +89,7 @@ const renderTabContent = () => {
         <div>
           <button 
             className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
-            onClick={handleUploadDocument}
+            //onClick={handleUploadDocument}
           >
             Send Message
           </button>
@@ -110,7 +110,7 @@ const renderTabContent = () => {
         <div>
           <button 
             className="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded-md"
-            onClick={handleUploadDocument}
+            //onClick={handleUploadDocument}
           >
             Upload Documents
           </button>
